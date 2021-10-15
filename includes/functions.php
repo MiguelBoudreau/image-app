@@ -37,4 +37,34 @@ function time_ago($datetime, $full = false) {
 
 
 
+
+//count the number of apporoved comments on any post
+function count_comments( $id = 0 ){
+    //tell the function to use the DB connection from the global scope
+    global $DB;
+    //write the query
+    $result = $DB->prepare('SELECT COUNT(*) AS total
+                            FROM comments
+                            WHERE post_id = ?');
+    //run it
+    $result->execute( array( $id 
+    ) );
+    //check it
+    if($result->rowCount() >= 1 ){
+    //loop it
+    while( $row = $result->fetch() ){
+        //return the count
+        echo $row['total'];
+        }
+    }
+}
+
+function show_profile_pic( $profile_pic, $size = 50 ){
+    if( $profile_pic == '' ){
+        $profile_pic = 'images/user.png';
+    }
+    echo "<img src='$profile_pic' width='$size' height='$size'>";
+}
+
+
 //no close php

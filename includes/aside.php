@@ -15,7 +15,7 @@
         <ul>
             <?php while( $row = $result->fetch() ){ ?>
             <li class="user">
-                <img src="<?php echo $row['profile_pic']; ?>" width="50" height="50">
+                <?php show_profile_pic( $row['profile_pic'] ); ?>
                 <?php echo $row['username']; ?>
                 USERNAME
             </li>
@@ -25,9 +25,10 @@
     <?php } //end if users ?>
 
     <?php 
-    $result = $DB->prepare('SELECT category_id, name
-                            FROM categories
-                            ORDER BY name ASC
+    $result = $DB->prepare('SELECT categories.name, COUNT(*) AS total
+                            FROM posts, categories
+                            WHERE categories.category_id = posts.category_id
+                            GROUP BY posts.category_id
                             LIMIT 20');
 
     // run it
@@ -39,16 +40,16 @@
     <h3>Categories</h3>
         <ul>
             <?php while( $row = $result->fetch() ){ ?>
-            <li>
-                <?php echo $row['name']; ?>
-            </li>
+            
+                <li><?php echo $row['name']; ?> - <?php echo $row['total']; ?> Posts</li>
+            
         <?php } ?>
         </ul>
     </section>
     <?php } ?>
     <?php 
-    $result = $DB->prepare('SELECT tag_id, name
-                            FROM categories
+    $result = $DB->prepare('SELECT name
+                            FROM tags
                             ORDER BY name ASC
                             LIMIT 20');
 
